@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#8cb362"
+    android:clipChildren="false"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    tools:context="com.shoxive.animalgamedemo.MainActivity">
+
+    <com.shoxive.animalgamedemo.view.CheckerboardView
+        android:id="@+id/checkerboard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:background="@mipmap/board_background"
+        android:clipChildren="false" />
+
+    <TextView
+        android:id="@+id/tv_turns"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/holo_blue_light"
+        android:paddingBottom="2dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="2dp"
+        android:text="蓝色方回合"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/img_rule"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_turns"
+        android:layout_marginTop="10dp"
+        android:background="@mipmap/gaming_rule" />
+</RelativeLayout>
