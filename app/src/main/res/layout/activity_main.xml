@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="#8cb362"
     android:clipChildren="false"
+    android:clipToPadding="false"
     android:paddingLeft="12dp"
     android:paddingRight="12dp"
     tools:context="com.shoxive.animalgamedemo.MainActivity">

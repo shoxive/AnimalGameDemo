@@ -31,6 +31,11 @@ public class CheckerboardView extends RelativeLayout implements ChessBridge {
     private int mChessWidth;
     private int mChessHeight;
     private boolean isBlueTurns = true;
+
+    public boolean isBlueTurns() {
+        return isBlueTurns;
+    }
+
     private CheckAction mActionState = CheckAction.UNFOCUS;
     private int mLaseSelectPosition = -1;
     private ChessBoardBridge mChessBoardBridge;
@@ -48,6 +53,8 @@ public class CheckerboardView extends RelativeLayout implements ChessBridge {
         super(context, attrs);
         this.mContext = context;
         mMargin = IConfig.CHESS_MARGIN;
+        this.setClipChildren(false);
+        this.setClipToPadding(false);
         initChess();
     }
 
@@ -70,7 +77,7 @@ public class CheckerboardView extends RelativeLayout implements ChessBridge {
         for (int i = 0; i < mChessList.size(); i++) {
             ChessView chessView = new ChessView(getContext());
             chessView.setId(i + 1);
-            chessView.initChess(mChessList.get(i), this);
+            chessView.initChess(mChessList.get(i), this, this);
             mChessViewList.add(chessView);
         }
     }
@@ -83,6 +90,7 @@ public class CheckerboardView extends RelativeLayout implements ChessBridge {
         if (!mFirstInit) {//只分配一次
             RelativeLayout.LayoutParams params = (LayoutParams) this.getLayoutParams();
             params.height = (int) (getMeasuredWidth() * 1.1333);
+
             for (int i = 0; i < mChessViewList.size(); i++) {
                 RelativeLayout.LayoutParams layoutParams = new LayoutParams(mChessWidth, mChessHeight);
                 //第一列
@@ -116,6 +124,9 @@ public class CheckerboardView extends RelativeLayout implements ChessBridge {
         isBlueTurns = !isBlueTurns;
         if (mChessBoardBridge != null) {
             mChessBoardBridge.updateTurns(isBlueTurns);
+        }
+        for (ChessView chessView : mChessViewList) {
+            chessView.updateChessStatus();
         }
         mActionState = CheckAction.UNFOCUS;
         mLaseSelectPosition = -1;
@@ -154,6 +165,10 @@ public class CheckerboardView extends RelativeLayout implements ChessBridge {
             for (int i = 0; i < mChessList.size(); i++) {
                 if (mChessList.get(i).isSelect()) {
                     mChessList.get(i).setSelect(false);
+                    mChessViewList.get(i).updateChessStatus();
+                }
+                if (mChessList.get(i).isLastHand() && i != position) {//标记上一手
+                    mChessList.get(i).setLastHand(false);
                     mChessViewList.get(i).updateChessStatus();
                 }
             }
@@ -201,11 +216,29 @@ public class CheckerboardView extends RelativeLayout implements ChessBridge {
     @Override
     public void moveActionEnd(int startPosition, int endPosition, boolean needResetSelf) {
         //棋子移动结束，执行交换逻辑
-        mChessViewList.get(startPosition).updateChessStatus();
-        mChessViewList.get(endPosition).updateChessStatus();
+
         if (needResetSelf) {
+            mChessList.get(endPosition).setLastHand(true);
+            for (int i = 0; i < mChessList.size(); i++) {
+                if (mChessList.get(i).isLastHand() && i != endPosition) {//标记上一手
+                    mChessList.get(i).setLastHand(false);
+                    mChessViewList.get(i).updateChessStatus();
+                }
+            }
+            mChessViewList.get(endPosition).bringToFront();
+            mChessViewList.get(startPosition).updateChessStatus();
+            mChessViewList.get(endPosition).updateChessStatus();
             mChessViewList.get(startPosition).updateStatusWithMoveAction(endPosition, startPosition);//主动方棋子自杀，执行完自杀动画后，需要归位到之前的棋格(无需交换位置)
         } else {
+            mChessList.get(startPosition).setLastHand(true);
+            for (int i = 0; i < mChessList.size(); i++) {
+                if (mChessList.get(i).isLastHand() && i != startPosition) {//标记上一手
+                    mChessList.get(i).setLastHand(false);
+                    mChessViewList.get(i).updateChessStatus();
+                }
+            }
+            mChessViewList.get(startPosition).updateChessStatus();
+            mChessViewList.get(endPosition).updateChessStatus();
             //交换
             mChessViewList.get(endPosition).updateStatusWithMoveAction(endPosition, startPosition);//从动棋子需要执行动画更换位置
             Collections.swap(mChessList, startPosition, endPosition);

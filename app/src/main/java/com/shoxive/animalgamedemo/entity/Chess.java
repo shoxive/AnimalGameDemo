@@ -16,6 +16,15 @@ public class Chess {
     private int topType;
     private int rightType;
     private int downType;
+    private boolean isLastHand;//是否是上一手
+
+    public boolean isLastHand() {
+        return isLastHand;
+    }
+
+    public void setLastHand(boolean lastHand) {
+        isLastHand = lastHand;
+    }
 
     public int getLeftType() {
         return leftType;

@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
     android:clipChildren="false"
+    android:clipToPadding="false"
     android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/chess_light_back"
+        android:visibility="gone"
+        android:layout_width="110dp"
+        android:layout_height="140dp"
+        android:background="@mipmap/chess_light_background"/>
     <ImageView
         android:id="@+id/img_chess"
         android:layout_width="80dp"
         android:layout_height="100dp"
+        tools:background="@android:color/holo_red_light"
         android:layout_centerInParent="true"/>
     <View
         android:id="@+id/arrow_left"
@@ -42,4 +52,13 @@
         android:layout_marginBottom="-15dp"
         android:layout_centerHorizontal="true"
         android:background="@android:color/holo_green_light"/>
+    <ImageView
+        android:id="@+id/last_hand"
+        android:layout_width="48dp"
+        android:layout_height="32dp"
+        android:visibility="gone"
+        android:background="@mipmap/last_hand"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="-16dp"
+        android:layout_marginRight="-12dp"/>
 </RelativeLayout>

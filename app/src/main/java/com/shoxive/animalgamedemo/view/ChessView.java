@@ -26,8 +26,8 @@ public class ChessView extends FrameLayout {
     private int mChessW;
     private int mChessH;
     private Chess mChess;
-    private View mView;
-    private ImageView mImgChess;
+    private RelativeLayout mView;
+    private ImageView mImgChess, mImgLightBack, mLastHand;
     private View arrow_left, arrow_top, arrow_right, arrow_down;
     private Context mContext;
     private ChessBridge mBridge;
@@ -36,6 +36,7 @@ public class ChessView extends FrameLayout {
     private ObjectAnimator mTrasnlateAnim;
     private float mLocationX = 0f;
     private float mLocationY = 0f;
+    private CheckerboardView mChessBoard;
 
     public Chess getChess() {
         return mChess;
@@ -47,8 +48,9 @@ public class ChessView extends FrameLayout {
         width = Resources.getSystem().getDisplayMetrics().widthPixels - ScreenUtil.dip2px(getContext(), 24);
         mChessW = (width - IConfig.CHESS_MARGIN * (IConfig.CHESS_ORDER + 1)) / IConfig.CHESS_ORDER;
         mChessH = (int) ((width * 1.1333 - IConfig.CHESS_MARGIN * (IConfig.CHESS_ORDER + 1)) / IConfig.CHESS_ORDER);
-        mView = inflate(mContext, R.layout.layout_chess_view, null);
+        mView = (RelativeLayout) inflate(mContext, R.layout.layout_chess_view, null);
         mView.setLayoutParams(new LayoutParams(mChessW, mChessH));
+        mView.setClipChildren(false);
         addView(mView);
         this.setClipChildren(false);
         initView();
@@ -58,9 +60,10 @@ public class ChessView extends FrameLayout {
         super(context, attrs);
     }
 
-    public void initChess(Chess chess, ChessBridge bridge) {
+    public void initChess(Chess chess, ChessBridge bridge, CheckerboardView checkerboardView) {
         this.mChess = chess;
         this.mBridge = bridge;
+        this.mChessBoard = checkerboardView;
         updateChessStatus();
     }
 
@@ -71,10 +74,20 @@ public class ChessView extends FrameLayout {
 
     private void initView() {
         mImgChess = findViewById(R.id.img_chess);
+        mLastHand = findViewById(R.id.last_hand);
         RelativeLayout.LayoutParams imgParams = (RelativeLayout.LayoutParams) mImgChess.getLayoutParams();
         imgParams.width = mChessW;
         imgParams.height = mChessH;
         imgParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        mImgLightBack = findViewById(R.id.chess_light_back);
+        RelativeLayout.LayoutParams lightParams = (RelativeLayout.LayoutParams) mImgLightBack.getLayoutParams();
+        lightParams.width = mChessW + mChessW / 5;
+        lightParams.height = mChessH + mChessH / 5;
+        lightParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        lightParams.leftMargin = -((mChessW / 5) / 2);
+        lightParams.rightMargin = -((mChessW / 5) / 2);
+        lightParams.topMargin = -((mChessH / 5) / 2);
+        lightParams.bottomMargin = -((mChessH / 5) / 2);
         mImgChess.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,15 +110,18 @@ public class ChessView extends FrameLayout {
             return;
         }
         mTmpPosition = mChess.getPosition();
+        mLastHand.setVisibility(View.GONE);
+        mImgLightBack.setVisibility(View.GONE);
         switch (mChess.getStatus()) {
             case 0://棋子未翻开状态
                 this.setVisibility(View.VISIBLE);
                 mImgChess.setBackgroundResource(R.mipmap.chessman_back);
+                mImgLightBack.setVisibility(View.VISIBLE);
                 break;
             case 1://棋子已翻开状态
                 this.setVisibility(View.VISIBLE);
                 switch (mChess.getOwnership()) {
-                    case 0://自己的棋子
+                    case 0://蓝色方的棋子
                         switch (mChess.getType()) {
                             case 0:
                                 mImgChess.setBackgroundResource(R.mipmap.chessman_mouse_blue);
@@ -133,7 +149,7 @@ public class ChessView extends FrameLayout {
                                 break;
                         }
                         break;
-                    case 1://对手的棋子
+                    case 1://红色方的棋子
                         switch (mChess.getType()) {
                             case 0:
                                 mImgChess.setBackgroundResource(R.mipmap.chessman_mouse_red);
@@ -161,6 +177,19 @@ public class ChessView extends FrameLayout {
                                 break;
                         }
                         break;
+                }
+                if (mChess.isLastHand()) {
+                    mLastHand.setVisibility(View.VISIBLE);
+                } else {
+                    mLastHand.setVisibility(View.GONE);
+                }
+                if (mChessBoard != null) {
+                    if (mChess.getOwnership() == 0 && mChessBoard.isBlueTurns()) {
+                        mImgLightBack.setVisibility(View.VISIBLE);
+                    }
+                    if (mChess.getOwnership() == 1 && !mChessBoard.isBlueTurns()) {
+                        mImgLightBack.setVisibility(View.VISIBLE);
+                    }
                 }
                 break;
             case 2://这个棋子已被淘汰
@@ -280,6 +309,8 @@ public class ChessView extends FrameLayout {
      */
     public void openChess() {
         mChess.setStatus(1);
+        mChess.setLastHand(true);
+        this.bringToFront();
         updateChessStatus();
     }
 
