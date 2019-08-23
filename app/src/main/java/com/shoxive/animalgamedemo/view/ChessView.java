@@ -3,13 +3,14 @@ package com.shoxive.animalgamedemo.view;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import androidx.core.view.ViewCompat;
 
 import com.shoxive.animalgamedemo.ChessBridge;
 import com.shoxive.animalgamedemo.R;
@@ -273,33 +274,33 @@ public class ChessView extends FrameLayout {
 
         mImgChess.setBackgroundResource(0);
         if (startPosition - endPosition == 1) {//棋子向左
-            Log.d("updateStatusWithMoveAction--from==" + mLocationX, ",to===" + (mLocationX + (-(mChessW + IConfig.CHESS_MARGIN))));
+//            Log.d("updateStatusWithMoveAction--from==" + mLocationX, ",to===" + (mLocationX + (-(mChessW + IConfig.CHESS_MARGIN))));
             mTrasnlateAnim = ObjectAnimator.ofFloat(this, "translationX", mLocationX, mLocationX + (-(mChessW + IConfig.CHESS_MARGIN)));
             mTrasnlateAnim.setDuration(150);
             mTrasnlateAnim.start();
             mLocationX = mLocationX + (-(mChessW + IConfig.CHESS_MARGIN));
-            Log.d("updateStatusWithMoveAction棋子--" + mChess.getType() + "状态是--" + mChess.getStatus(), "向左移动到" + endPosition);
+//            Log.d("updateStatusWithMoveAction棋子--" + mChess.getType() + "状态是--" + mChess.getStatus(), "向左移动到" + endPosition);
         } else if (startPosition - endPosition == 4) {//棋子向上
-            Log.d("updateStatusWithMoveAction--from==" + mLocationY, ",to===" + (mLocationY + (-(mChessH + IConfig.CHESS_MARGIN))));
+//            Log.d("updateStatusWithMoveAction--from==" + mLocationY, ",to===" + (mLocationY + (-(mChessH + IConfig.CHESS_MARGIN))));
             mTrasnlateAnim = ObjectAnimator.ofFloat(this, "translationY", mLocationY, mLocationY + (-(mChessH + IConfig.CHESS_MARGIN)));
             mTrasnlateAnim.setDuration(150);
             mTrasnlateAnim.start();
             mLocationY = mLocationY + (-(mChessH + IConfig.CHESS_MARGIN));
-            Log.d("updateStatusWithMoveAction棋子--" + mChess.getType() + "状态是--" + mChess.getStatus(), "向上移动到" + endPosition);
+//            Log.d("updateStatusWithMoveAction棋子--" + mChess.getType() + "状态是--" + mChess.getStatus(), "向上移动到" + endPosition);
         } else if (startPosition - endPosition == -1) {//棋子向右
-            Log.d("updateStatusWithMoveAction--from==" + mLocationX, ",to===" + (mLocationX + mChessW + IConfig.CHESS_MARGIN));
+//            Log.d("updateStatusWithMoveAction--from==" + mLocationX, ",to===" + (mLocationX + mChessW + IConfig.CHESS_MARGIN));
             mTrasnlateAnim = ObjectAnimator.ofFloat(this, "translationX", mLocationX, mLocationX + mChessW + IConfig.CHESS_MARGIN);
             mTrasnlateAnim.setDuration(150);
             mTrasnlateAnim.start();
             mLocationX = mLocationX + (mChessW + IConfig.CHESS_MARGIN);
-            Log.d("updateStatusWithMoveAction棋子--" + mChess.getType() + "状态是--" + mChess.getStatus(), "向右移动到" + endPosition);
+//            Log.d("updateStatusWithMoveAction棋子--" + mChess.getType() + "状态是--" + mChess.getStatus(), "向右移动到" + endPosition);
         } else if (startPosition - endPosition == -4) {//棋子向下
-            Log.d("updateStatusWithMoveAction--from==" + mLocationY, ",to===" + (mLocationY + mChessH + IConfig.CHESS_MARGIN));
+//            Log.d("updateStatusWithMoveAction--from==" + mLocationY, ",to===" + (mLocationY + mChessH + IConfig.CHESS_MARGIN));
             mTrasnlateAnim = ObjectAnimator.ofFloat(this, "translationY", mLocationY, mLocationY + mChessH + IConfig.CHESS_MARGIN);
             mTrasnlateAnim.setDuration(150);
             mTrasnlateAnim.start();
             mLocationY = mLocationY + (mChessH + IConfig.CHESS_MARGIN);
-            Log.d("updateStatusWithMoveAction棋子--" + mChess.getType() + "状态是--" + mChess.getStatus(), "向下移动到" + endPosition);
+//            Log.d("updateStatusWithMoveAction棋子--" + mChess.getType() + "状态是--" + mChess.getStatus(), "向下移动到" + endPosition);
         }
         updateChessStatus();
     }
